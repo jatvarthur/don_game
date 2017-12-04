@@ -34,7 +34,7 @@
             game.load.image("game_loss", "images/ui/ill_end_game.png");
             game.load.image("game_loss_photo", "images/ui/ill_end_game_photo.png");
 
-            game.load.spritesheet("ic_building_type", "images/main/ic_building_sheet_150x150.png", 150, 150);
+            game.load.spritesheet("ic_building_type", "images/main/ic_building_sheet_150x150.png", 300, 300);
             game.load.spritesheet("ic_building", "images/main/houses.png", 125, 250);
 
             game.load.image("popup", "images/ui/w_pop_up_frame.png");

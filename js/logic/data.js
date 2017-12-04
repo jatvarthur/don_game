@@ -143,7 +143,7 @@
             x: 60,
             y: 330
         },{
-            title: "Wild Tequilla Casino",
+            title: "Tequilla Casino",
             id: "2_3",
             district: 2,
             income: 600,

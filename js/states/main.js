@@ -187,11 +187,14 @@
             }, this);
             dialog.add(button);
 
-            text = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
-            text.anchor.set(0.5, 0.5);
-            text.wordWrap = true;
-            text.wordWrapWidth = 200 * .9;
-            dialog.add(text);
+            var btntext = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
+            btntext.anchor.set(0.5, 0.5);
+            btntext.wordWrap = true;
+            btntext.wordWrapWidth = 200 * .9;
+            dialog.add(btntext);
+            button.events.onInputOver.add(function () { btntext.scale.set(1.1); }, this);
+            button.events.onInputOut.add(function () { btntext.scale.set(1.0); }, this);
+
 
             this._modal = dialog;
         }
@@ -247,11 +250,14 @@
             }, this);
             dialog.add(button);
 
-            text = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
-            text.anchor.set(0.5, 0.5);
-            text.wordWrap = true;
-            text.wordWrapWidth = 200 * .9;
-            dialog.add(text);
+            var btntext = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
+            btntext.anchor.set(0.5, 0.5);
+            btntext.wordWrap = true;
+            btntext.wordWrapWidth = 200 * .9;
+            dialog.add(btntext);
+            button.events.onInputOver.add(function () { btntext.scale.set(1.1); }, this);
+            button.events.onInputOut.add(function () { btntext.scale.set(1.0); }, this);
+
 
             this._modal = dialog;
         }
@@ -314,11 +320,13 @@
             }, this);
             dialog.add(button);
 
-            text = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
-            text.anchor.set(0.5, 0.5);
-            text.wordWrap = true;
-            text.wordWrapWidth = 200 * .9;
-            dialog.add(text);
+            var btntext = game.add.text(posx + button.width / 2, posy -  button.height / 2, window.static.S.playButton, this.style_buttonGreenText);
+            btntext.anchor.set(0.5, 0.5);
+            btntext.wordWrap = true;
+            btntext.wordWrapWidth = 200 * .9;
+            dialog.add(btntext);
+            button.events.onInputOver.add(function () { btntext.scale.set(1.1); }, this);
+            button.events.onInputOut.add(function () { btntext.scale.set(1.0); }, this);
 
             this._modal = dialog;
         }
@@ -339,20 +347,21 @@
             back.height = height;
             dialog.add(back);
 
-            var close = game.add.sprite(width - 25, 25, "button_close");
-            close.anchor.set(1.0, 0);
+            var close = game.add.sprite(width - 65, 65, "button_close");
+            close.anchor.set(0.5, 0.5);
             close.inputEnabled = true;
             close.events.onInputDown.add(this.closeModal, this);
+            close.events.onInputOver.add(function () { close.scale.set(1.1); }, this);
+            close.events.onInputOut.add(function () { close.scale.set(1.0); }, this);
             dialog.add(close);
 
-            var building = game.add.sprite(50, 50, "ic_building");
+            var building = game.add.sprite(25, 50, "ic_building");
             building.scale.set(2.0);
             building.frame = point.building;
             dialog.add(building);
 
             var icon = game.add.sprite(100, 0, "ic_building_type");
             icon.anchor.set(0.0, 0.35);
-            icon.scale.set(2.0);
             icon.frame = point.kind;
             dialog.add(icon);
 
@@ -448,6 +457,7 @@
         , addDialogButton: function (dialog, posx, posy, label, enabled, handler, overtext) {
             var button = game.add.sprite(posx, posy, "button");
             button.anchor.set(0, 1.0);
+            if (!enabled) button.alpha = 0.5;
             button.inputEnabled = enabled;
             button.events.onInputDown.add(handler, this);
             dialog.add(button);
@@ -458,6 +468,15 @@
             text.wordWrap = true;
             text.wordWrapWidth = 200 * .9;
             dialog.add(text);
+
+            if (enabled) {
+                button.events.onInputOver.add(function () {
+                    text.scale.set(1.1);
+                }, this);
+                button.events.onInputOut.add(function () {
+                    text.scale.set(1.0);
+                }, this);
+            }
 
             if (overtext) {
                 text = game.add.text(posx + button.width / 2, posy - button.height, overtext, this.style_normalText);
