@@ -23,7 +23,7 @@
             title: "Po's Laundry",
             district: 1,
             income: 200,
-            influence: 5,
+            influence: 600,
             level: 2,
             ownership: -1,
             kind: 12,
@@ -423,7 +423,7 @@
             x: 800,
             y: 250
         },{
-            title: "Armani",
+            title: "Suit",
             district: 4,
             income: 600,
             influence: 2000,
@@ -580,54 +580,57 @@
 
         , negativeEvents: [{
             title: "Pay your taxes: %d$",
-            delta: -150
+            delta: -20
         },{
             title: "Fire inspection: %d$",
-            delta: -50
+            delta: -5
         },{
             title: "Labor union: %d$",
-            delta: -100
+            delta: -10
         },{
             title: "It's mayor's birthday: %d$",
-            delta: -50
+            delta: -5
         },{
             title: "It's city foundation day: %d$",
-            delta: -100
+            delta: -10
         },{
             title: "Don Mafioso sent his guys: %d$",
-            delta: -250
+            delta: -25
         }]
 
         , positiveEvents: [{
             title: "Here is some bribe: %d$",
-            delta: +50
+            delta: +5
         },{
             title: "You won the derby: %d$",
-            delta: +70
+            delta: +7
         },{
             title: "Good night in casino: %d$",
-            delta: +80
+            delta: +8
         },{
             title: "One must pay their debts: %d$",
-            delta: +10
+            delta: +1
         },{
             title: "It's good to have a judge in court: %d$",
-            delta: +20
+            delta: +2
         }]
 
 
         // income levels
         , incomesLevels: [-1, 100, 200, 300]
         // expenses levels
-        , expensesLevels: [-1, 50, 100, 150]
+        , expensesLevels: [-1, 50, 200, 400]
 
 
         // one logic time tick (virtual day) in ms
-        , timestep: 1000
+        , timestep: 2000
         // logic period in virtual days - virtual week
         , period: 7
         // point radius for clicks
         , pointRadius: 56
+
+        // initial amount of money
+        , initialMoney: 300
 
 
 

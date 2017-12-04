@@ -132,9 +132,10 @@
 
         , style_titleText:    { font: "56px Georgia", fill: "#3b3232", align: "left" }
         , style_normalText:   { font: "24px Georgia", fill: "#3b3232", align: "left" }
+        , style_normalRedText:   { font: "24px Georgia", fill: "#b82b23", align: "left" }
         , style_introText:    { font: "24px Georgia", fill: "#3b3232", align: "center" }
         , style_buttonText:   { font: "56px Barlow Condensed", fill: "#ede7db", align: "center" }
-        , style_buttonDisText:{ font: "56px Barlow Condensed", fill: "#857f79", align: "center" }
+        , style_buttonDisText:{ font: "56px Barlow Condensed", fill: "#e2d9d7", align: "center" }
         , style_buttonGreenText:{ font: "56px Barlow Condensed", fill: "#86d500", align: "center" }
         , style_hudText:      { font: "24px Georgia", fill: "#ede7db", align: "right" }
 
@@ -291,7 +292,7 @@
             text.wordWrapWidth = 500 * .9;
             dialog.add(text);
 
-            text = game.add.text(600, 250, window.static.S.lossText, this.style_introText);
+            text = game.add.text(600, 200, window.static.S.lossText, this.style_introText);
             text.anchor.set(0.5, 0.0);
             text.wordWrap = true;
             text.wordWrapWidth = 500 * .9;
@@ -303,7 +304,7 @@
             text.wordWrapWidth = 500 * .9;
             dialog.add(text);
 
-            text = game.add.text(600, 350, this.maxIncome+"$", this.style_titleText);
+            text = game.add.text(550, 350, this.maxIncome+"$", this.style_titleText);
             text.anchor.set(0.0, 0.85);
             text.wordWrap = true;
             text.wordWrapWidth = 500 * .9;
@@ -355,12 +356,12 @@
             close.events.onInputOut.add(function () { close.scale.set(1.0); }, this);
             dialog.add(close);
 
-            var building = game.add.sprite(25, 50, "ic_building");
+            var building = game.add.sprite(50, 50, "ic_building");
             building.scale.set(2.0);
             building.frame = point.building;
             dialog.add(building);
 
-            var icon = game.add.sprite(100, 0, "ic_building_type");
+            var icon = game.add.sprite(75, 0, "ic_building_type");
             icon.anchor.set(0.0, 0.35);
             icon.frame = point.kind;
             dialog.add(icon);
@@ -392,8 +393,10 @@
             text.wordWrapWidth = 500 * .9;
             dialog.add(text);
 
+            var canSeizePoint = logic.canSeizePoint(point);
             if (point.isNeutral()) {
-                text = game.add.text(350, 400, sprintf(window.static.S.influenceNeeded, point.influence), this.style_normalText);
+                text = game.add.text(350, 400, sprintf(window.static.S.influenceNeeded, point.influence),
+                    canSeizePoint ? this.style_normalText : this.style_normalRedText);
                 text.anchor.set(0.0, 1.0);
                 text.wordWrap = true;
                 text.wordWrapWidth = 500 * .9;
@@ -418,7 +421,6 @@
                 dialog.add(gleft);
             }
 
-            var canSeizePoint = logic.canSeizePoint(point);
             if (point.isNeutral()) {
                 this.addDialogButton(dialog, 350, height - 46, window.static.S.seizeButton, canSeizePoint, function () {
                     logic.seizePoint(point);

@@ -46,7 +46,7 @@
             // title
             this.title = title;
             // current amount og money gained
-            this.money = 0;
+            this.money = window.static.initialMoney;
             // points owned
             this.pointsOwned = 0;
 
@@ -88,6 +88,8 @@
         , players: []
         // police in region
         , police: []
+        // police in region
+        , policeTick: []
         // current tick
         , tickNo: 0
         // whether game in progress
@@ -119,13 +121,21 @@
             this.police.push(0);
             this.police.push(0);
 
+            this.policeTick.length = 0;
+            this.policeTick.push(0);
+            this.policeTick.push(0);
+            this.policeTick.push(0);
+            this.policeTick.push(0);
+
+
             // points
             this.points.length = 0;
             _.each(window.static.points, function(item) {
                 var point = _.extend(new Point(), item);
                 point.owner = item.ownership != -1 ? this.players[item.ownership] : null;
                 if (point.owner) {
-                    this.police[point.level] = window.static.expensesLevels[point.level];
+                    if (point.ownership == 0)
+                        this.police[point.level] = window.static.expensesLevels[point.level];
                     point.owner.pointsOwned += 1;
                 }
                 this.points.push(point);
@@ -139,6 +149,10 @@
         , update: function() {
             if (!this.active)
                 return;
+
+            // win
+            if (this.players[0].pointsOwned == this.points.length)
+                this.winGame();
 
             this.tickNo += 1;
             var isWeek = this.tickNo % window.static.period == 0;
@@ -158,7 +172,7 @@
             if (isPolice)
                 return;
 
-            if (game.rnd.frac() < 0.25) {
+            if (game.rnd.frac() < 0.125) {
                 var free = null;
                 for (var i = this.points.length - 1; i >= 0; --i) {
                     if (!this.points[i].isAI()) {
@@ -199,8 +213,13 @@
                 return;
 
             // todo: city district, for each add a pliceman
-            var base = this.police[1] + this.police[2] + this.police[3];
-            var delta = -Math.floor(base * this.players[0].pointsOwned / 3 * (1 + (this.tickNo / window.static.period) * 0.2));
+            //var base = this.police[1] + this.police[2] + this.police[3];
+            var delta1 = -Math.floor(this.police[1] * this.players[0].pointsOwned / 3 * (1 + ((this.tickNo - this.policeTick[1]) / window.static.period) * 0.2));
+            var delta2 = -Math.floor(this.police[2] * this.players[0].pointsOwned / 5 * (1 + ((this.tickNo - this.policeTick[2]) / window.static.period) * 0.2));
+            var delta3 = -Math.floor(this.police[3] * this.players[0].pointsOwned / 7 * (1 + ((this.tickNo - this.policeTick[3]) / window.static.period) * 0.2));
+            var delta = delta1 + delta2 + delta3;
+            console.log("police "  +delta);
+
             var event = new Event(EventKind.POLICE, sprintf(window.static.S.paidPolice, delta), delta);
             this.changeMoney(delta, event);
         }
@@ -213,9 +232,12 @@
             if (game.rnd.frac() < 0.25) {
                 this.thisWeekEvents += 1;
 
-                var isPositive = this.tickNo < window.static.period || game.rnd.frac() < 0.33;
+                var isPositive = this.tickNo < 2*window.static.period || game.rnd.frac() < 0.33;
                 var edata = game.rnd.pick(isPositive ? window.static.positiveEvents : window.static.negativeEvents);
-                var event = new Event(EventKind.RANDOM, sprintf(edata.title, edata.delta), edata.delta);
+                var delta = Math.floor(edata.delta * (1 + (this.tickNo / window.static.period) * 0.3));
+                console.log(isPositive + " - " + delta);
+
+                var event = new Event(EventKind.RANDOM, sprintf(edata.title, delta), delta);
                 this.changeMoney(edata.delta, event);
             }
         }
@@ -275,12 +297,11 @@
 
             var event = this._updatePointOwner(point, 0);
             // update police
+            if (this.police[point.level] == 0)
+                this.policeTick[point.level] = this.tickNo;
             this.police[point.level] = window.static.expensesLevels[point.level];
-            this.onPointSeized.dispatch(event);
 
-            // win
-            if (this.players[0].pointsOwned == this.points.length)
-                this.winGame();
+            this.onPointSeized.dispatch(event);
         }
 
         , changeMoney: function(delta, event) {
@@ -302,7 +323,7 @@
 
         , winGame: function() {
             this.active = false;
-            this.onGameWon.dispatch(new Event(EventInit.GAME_WON, window.static.S.win));
+            this.onGameWon.dispatch(new Event(EventKind.GAME_WON, window.static.S.win));
         }
 
     };
